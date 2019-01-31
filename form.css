@@ -1,0 +1,56 @@
+.customField {
+    margin-top: 15px;
+    position:relative;
+}
+
+    .customField .customFieldLabel {
+        width: 200px;
+        float: left;
+    }
+
+    .customField .customFieldControl {
+        position: relative;
+        float: left;
+    }
+
+    .customField .errorIcon {
+        display: none;
+    }
+
+    .customField.invalid .errorIcon {
+        display: inline-block;
+        padding-left: 5px;
+    }
+
+    /* .customField .customFieldControl::before {
+        content: "";
+        width: 23px;
+        height: 23px;
+        background: red;
+        top: 2px;
+        right: -27px;
+        position: absolute;
+        border-radius: 15px;
+        display: none;
+    }
+    .customField .customFieldControl::after {
+        content: "!";
+        color: white;
+        width: 23px;
+        height: 23px;
+        top: 2px;
+        right: -35px;
+        position: absolute;
+        border-radius: 15px;
+        font-weight: bolder;
+        display: none;
+    } */
+    .customField.invalid .customFieldControl::before , .customField.invalid .customFieldControl::after {
+        display: inline;
+    }
+.formActions {
+    width: 400px
+}
+    .formActions input[type="button"] {
+        float: right;
+    }
