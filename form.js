@@ -1,81 +1,97 @@
-var fields = [
+var customFields = [
     {
         "id": "1",
-        "label": "Field One",
+        "label": "Textbox",
         "type": "text",
         "required": true,
+		"validationMessage": "Field is required",
     },
     {
         "id": "2",
-        "label": "Field Two",
+        "label": "Checkbox",
         "type": "checkbox",
         "required": true,
+		"validationMessage": "Field is required",
     },
     {
         "id": "3",
-        "label": "Field Three",
+        "label": "Checkbox",
         "type": "checkbox",
         "required": true,
+		"validationMessage": "Field is required",
     },
     {
         "id": "4",
-        "label": "Field Four",
+        "label": "Checkbox List",
         "type": "checkbox-list",
         "options": "option1|option2|option3",
         "required": true,
+		"validationMessage": "Field is required",
     },
     {
         "id": "5",
-        "label": "Field Five",
+        "label": "Radio List",
         "type": "radio-list",
         "options": "option1|option2|option3",
         "required": true,
+		"validationMessage": "Field is required",
     },
     {
         "id": "6",
-        "label": "Field Six",
+        "label": "Text area",
         "type": "textarea",
         "required": true,
+		"validationMessage": "Field is required",
     },
     {
         "id": "7",
-        "label": "Field Seven",
+        "label": "Numeric",
         "type": "number",
         "required": true,
+		"validationMessage": "Field is required",
     },
     {
         "id": "8",
-        "label": "Field Eight",
+        "label": "Date Field",
         "type": "date",
         "required": true,
+		"validationMessage": "Field is required",
     },
     {
         "id": "9",
-        "label": "Field Nine",
+        "label": "DropDownList",
         "type": "dropdown",
         "options": "option1|option2|option3",
         "required": true,
+		"validationMessage": "Field is required",
     },
     
 ]
 
-var $customFieldContainer;
 
-$(function () {
-    console.log(fields);
+$(function() {
+	addCustomFields(customFields ,'customFieldsContainer');
+	$('#btnValidate').click(function(){
+		validateForm('customFieldsContainer');
+	});
+});
+
+function addCustomFields(fields, containerName) {
+
     // Get the main div
-    $customFieldsContainer = $('#customFieldsContainer');
+    $customFieldsContainer = $('#' + containerName);
 
     $.each(fields, function (i, field) {
         var $customField = $('<div>')
             .addClass('customField')
+			.attr('data-cf-id', field.id);
         var $labelContainer = $('<div>')
             .addClass('customFieldLabel')
         $labelContainer.append($('<span>')
             .text(field.label)
         );
         if (field.required) {
-            $customField.addClass('required'); 
+            // $customField.addClass('required'); 
             $labelContainer.append($('<span>')
             .text('*').addClass('required-indicator'))
         }
@@ -83,9 +99,10 @@ $(function () {
         $customField.append($labelContainer);
 
         var $customFieldControlContainer = $('<div>')
-        .addClass('customFieldControl')
-        
-        var $customFieldControl = $('');
+        .addClass('customFieldControl');
+
+		var $customFieldControl;
+		
         switch (field.type) {
             case 'checkbox-list':
                 $.each(field.options.split('|'), function(j, option){
@@ -106,13 +123,13 @@ $(function () {
                     $customFieldControl = $('<div>')
                         .addClass('radio-list-item');
                     $customFieldControl.append($('<input>')
-                    .attr('type', 'radio')
-                    .attr('id', 'cf_' + field.id + '_' + j)
-                    .attr('value', option)
-                    .attr('name', 'cf_' + field.Id));
+	                    .attr('type', 'radio')
+	                    .attr('id', 'cf_' + field.id + '_' + j)
+	                    .attr('value', option)
+	                    .attr('name', 'cf_' + field.Id));
                     $customFieldControl.append($('<label>')
-                    .attr('for', 'cf_' + field.id + '_' + j)
-                    .text(option));
+	                    .attr('for', 'cf_' + field.id + '_' + j)
+	                    .text(option));
                     $customFieldControlContainer.append($customFieldControl);
                 })
                 break;
@@ -124,7 +141,7 @@ $(function () {
                 break;
             case 'textarea':
                 $customFieldControl = $('<textarea>')
-                .attr('id', 'cf_' + field.id)
+                	.attr('id', 'cf_' + field.id)
                 $customFieldControlContainer.append($customFieldControl);
                 break;
             case 'number':
@@ -142,6 +159,13 @@ $(function () {
             case 'dropdown':
                 $customFieldControl = $('<select>')
                     .attr('id', 'cf_' + field.id);
+				$customFieldControl.append($('<option>')
+					.attr('disabled', 'disabled')
+					.attr('selected', 'true')
+					.attr('value', '')
+					.css('display', 'none')
+					.text('--select an option--')
+				);
                 $.each(field.options.split('|'), function(j, option){
                     $customFieldControl.append($('<option>')
                         .attr('value', option)
@@ -167,5 +191,72 @@ $(function () {
         $customFieldsContainer.append($('<div>')
         .css('clear', 'both'));
     });
-    
-});
+}
+
+function validateForm(containerName) {
+	var $customFieldsContainer = $('#' + containerName);
+	var $customFields = $customFieldsContainer.find('.customField');
+	$customFields.removeClass('invalid');
+	
+	$customFields.each(function(){
+		var invalid = false;
+		var id = $(this).attr('data-cf-id');
+		var cf = customFields.filter(function(x){ return x.id == id; });
+		if(cf.length > 0) cf= cf[0];
+		if(cf.required) {
+			switch (cf.type) {
+				case 'text':
+					if($(this).find('input[type="text"]').val().trim().length === 0){
+						invalid = true;
+					}
+					break;
+				case 'checkbox':
+					if(!$(this).find('input[type="checkbox"]').prop('checked')){
+						invalid = true;
+					}
+					break;
+				case 'checkbox-list':
+					invalid = true;
+					$(this).find('input[type="checkbox"]').each(function(){
+						if($(this).prop('checked')){
+							invalid = false;
+						}
+					})
+					break;
+				case 'radio-list':
+					invalid = true;
+					$(this).find('input[type="radio"]').each(function(){
+						if($(this).prop('checked')){
+							invalid = false;
+						}
+					})
+					break;
+				case 'textarea':
+					if($(this).find('textarea').val().trim().length === 0){
+						invalid = true;
+					}
+					break;
+				case 'number':
+					if($(this).find('input[type="number"]').val().trim().length === 0){
+						invalid = true;
+					}
+					break;
+				case 'date':
+					if($(this).find('input[type="date"]').val().trim().length === 0){
+						invalid = true;
+					}
+					break;
+				case 'dropdown':
+					if($(this).find(':selected').val().trim().length === 0){
+						invalid = true;
+					}
+					break;
+			}
+		}
+		if (invalid) {
+			$(this).addClass('invalid');
+			$(this).find('.errorIcon').attr('title', cf.validationMessage);
+		}
+	})
+	
+}
