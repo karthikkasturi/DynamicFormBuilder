@@ -13,9 +13,15 @@
         float: left;
     }
 
+
+    .customField .required-indicator {
+        color: red;
+    }
+
     .customField .errorIcon {
         display: none;
     }
+
 
     .customField.invalid .errorIcon {
         display: inline-block;

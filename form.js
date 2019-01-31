@@ -3,49 +3,58 @@ var fields = [
         "id": "1",
         "label": "Field One",
         "type": "text",
+        "required": true,
     },
     {
         "id": "2",
         "label": "Field Two",
         "type": "checkbox",
+        "required": true,
     },
     {
         "id": "3",
         "label": "Field Three",
         "type": "checkbox",
+        "required": true,
     },
     {
         "id": "4",
         "label": "Field Four",
         "type": "checkbox-list",
         "options": "option1|option2|option3",
+        "required": true,
     },
     {
         "id": "5",
         "label": "Field Five",
         "type": "radio-list",
         "options": "option1|option2|option3",
+        "required": true,
     },
     {
         "id": "6",
         "label": "Field Six",
         "type": "textarea",
+        "required": true,
     },
     {
         "id": "7",
         "label": "Field Seven",
         "type": "number",
+        "required": true,
     },
     {
         "id": "8",
         "label": "Field Eight",
         "type": "date",
+        "required": true,
     },
     {
-        "id": "8",
+        "id": "9",
         "label": "Field Nine",
         "type": "dropdown",
-        "options": "option1|option2|option3"
+        "options": "option1|option2|option3",
+        "required": true,
     },
     
 ]
@@ -59,10 +68,18 @@ $(function () {
 
     $.each(fields, function (i, field) {
         var $customField = $('<div>')
-            .addClass('customField');
-        var $labelContainer = $('<span>')
+            .addClass('customField')
+        var $labelContainer = $('<div>')
             .addClass('customFieldLabel')
-            .text(field.label);
+        $labelContainer.append($('<span>')
+            .text(field.label)
+        );
+        if (field.required) {
+            $customField.addClass('required'); 
+            $labelContainer.append($('<span>')
+            .text('*').addClass('required-indicator'))
+        }
+         
         $customField.append($labelContainer);
 
         var $customFieldControlContainer = $('<div>')
