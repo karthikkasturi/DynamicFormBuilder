@@ -138,6 +138,8 @@ function addCustomFields(fields, containerName) {
                     .attr('type', 'checkbox')
                     .attr('id', 'cf_' + field.id)
                 $customFieldControlContainer.append($customFieldControl);
+				$customFieldControlContainer.append($('<label>')
+                    .attr('for', 'cf_' + field.id));
                 break;
             case 'textarea':
                 $customFieldControl = $('<textarea>')
