@@ -18,13 +18,34 @@ var fields = [
         "id": "4",
         "label": "Field Four",
         "type": "checkbox-list",
-        "options": "a|b|c",
+        "options": "option1|option2|option3",
     },
     {
         "id": "5",
         "label": "Field Five",
         "type": "radio-list",
-        "options": "a|b|c",
+        "options": "option1|option2|option3",
+    },
+    {
+        "id": "6",
+        "label": "Field Six",
+        "type": "textarea",
+    },
+    {
+        "id": "7",
+        "label": "Field Seven",
+        "type": "number",
+    },
+    {
+        "id": "8",
+        "label": "Field Eight",
+        "type": "date",
+    },
+    {
+        "id": "8",
+        "label": "Field Nine",
+        "type": "dropdown",
+        "options": "option1|option2|option3"
     },
     
 ]
@@ -82,6 +103,33 @@ $(function () {
                 $customFieldControl = $('<input>')
                     .attr('type', 'checkbox')
                     .attr('id', 'cf_' + field.id)
+                $customFieldControlContainer.append($customFieldControl);
+                break;
+            case 'textarea':
+                $customFieldControl = $('<textarea>')
+                .attr('id', 'cf_' + field.id)
+                $customFieldControlContainer.append($customFieldControl);
+                break;
+            case 'number':
+                $customFieldControl = $('<input>')
+                    .attr('type', 'number')
+                    .attr('id', 'cf_' + field.id)
+                $customFieldControlContainer.append($customFieldControl);
+                break;
+            case 'date':
+                $customFieldControl = $('<input>')
+                    .attr('type', 'date')
+                    .attr('id', 'cf_' + field.id)
+                $customFieldControlContainer.append($customFieldControl);
+                break;
+            case 'dropdown':
+                $customFieldControl = $('<select>')
+                    .attr('id', 'cf_' + field.id);
+                $.each(field.options.split('|'), function(j, option){
+                    $customFieldControl.append($('<option>')
+                        .attr('value', option)
+                        .text(option))
+                })
                 $customFieldControlContainer.append($customFieldControl);
                 break;
             case 'text':
